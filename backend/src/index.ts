@@ -1,15 +1,34 @@
+import { env } from './config/env';
 import express from 'express';
+import { corsMiddleware, helmetMiddleware, globalRateLimiter } from './middleware/security';
+import { requestLogger } from './middleware/logger';
+import { notFoundHandler, errorHandler } from './middleware/errorHandler';
+import apiRouter from './routes/index';
 
 const app = express();
-const port = process.env['PORT'] ?? 3001;
 
-app.use(express.json());
+// ── Security middleware ────────────────────────────────────────
+app.use(helmetMiddleware);
+app.use(corsMiddleware);
+app.use(globalRateLimiter);
 
-// Health check endpoint
-app.get('/api/v1/health', (_req, res) => {
-  res.json({ success: true, message: 'HandyNG API is running' });
+// ── Body parsing ───────────────────────────────────────────────
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: false }));
+
+// ── Request logging (dev only) ─────────────────────────────────
+app.use(requestLogger);
+
+// ── API routes ─────────────────────────────────────────────────
+app.use('/api/v1', apiRouter);
+
+// ── 404 & error handling (must be last) ───────────────────────
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+// ── Start server ───────────────────────────────────────────────
+app.listen(env.port, () => {
+  console.log(`HandyNG API running on port ${env.port} [${env.nodeEnv}]`);
 });
 
-app.listen(port, () => {
-  console.log(`HandyNG API running on port ${port}`);
-});
+export default app;
