@@ -1,0 +1,23 @@
+{
+  "name": "handy-ng",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "supabase"
+  ],
+  "scripts": {
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md}\" --ignore-path .prettierignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json,md}\" --ignore-path .prettierignore"
+  },
+  "devDependencies": {
+    "eslint": "^9.28.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.71.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "handy-ng-supabase",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "supabase": "^2.118.0",
+    "typescript": "^5.8.3"
+  }
+}
