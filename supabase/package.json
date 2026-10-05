@@ -3,10 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "migrate": "ts-node migrate.ts",
+    "seed": "ts-node migrate.ts --seed",
+    "build:sql": "ts-node build-migration.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@types/pg": "^8.11.14",
+    "pg": "^8.13.3",
     "supabase": "^2.118.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
 }
