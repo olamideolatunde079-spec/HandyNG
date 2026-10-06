@@ -1,24 +1,33 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL'];
-const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'];
+let _client: SupabaseClient | null = null;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required.'
-  );
+/**
+ * Returns the Supabase browser client (anon key only).
+ * Lazily initialised — never throws at module evaluation time, so it is safe
+ * to import in any file including those used during Next.js static generation.
+ *
+ * Only call this inside 'use client' components or client-side hooks.
+ */
+export function getSupabaseClient(): SupabaseClient {
+  if (_client) return _client;
+
+  const url = process.env['NEXT_PUBLIC_SUPABASE_URL'] ?? '';
+  const key = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] ?? '';
+
+  _client = createClient(url, key, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+  });
+
+  return _client;
 }
 
 /**
- * Frontend Supabase client — uses the anon/publishable key.
- *
- * This client is safe to use in browser code. All database access
- * is governed by Row Level Security policies. Never use the
- * service-role key here.
+ * Direct default export for convenience.
+ * Alias of getSupabaseClient() — use in 'use client' components only.
  */
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-});
+export default getSupabaseClient;

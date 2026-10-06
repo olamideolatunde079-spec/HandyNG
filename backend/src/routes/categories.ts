@@ -6,23 +6,17 @@ import {
   editCategory,
   removeCategory,
 } from '../controllers/categories.controller';
+import { requireAuth, requireAdmin } from '../middleware/requireAuth';
 
 const router = Router();
 
-/**
- * Public routes — no auth required
- */
+// ── Public ─────────────────────────────────────────────────────
 router.get('/', listCategories);
 router.get('/:slug', getCategory);
 
-/**
- * Admin-only routes.
- * Auth middleware (requireAuth + requireAdmin) will be added in Phase 3.
- * For now the routes exist but are unprotected — we will guard them in the
- * authentication phase. Do not expose these in production until then.
- */
-router.post('/', addCategory);
-router.patch('/:id', editCategory);
-router.delete('/:id', removeCategory);
+// ── Admin only ─────────────────────────────────────────────────
+router.post('/', requireAuth, requireAdmin, addCategory);
+router.patch('/:id', requireAuth, requireAdmin, editCategory);
+router.delete('/:id', requireAuth, requireAdmin, removeCategory);
 
 export default router;

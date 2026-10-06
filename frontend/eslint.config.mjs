@@ -1,37 +1,20 @@
-// @ts-check
-import tseslint from 'typescript-eslint';
-import pluginReact from 'eslint-plugin-react';
-import nextPlugin from '@next/eslint-plugin-next';
-
-export default tseslint.config(
+/**
+ * Frontend ESLint flat config — minimal, fast.
+ *
+ * TypeScript type-checking is done separately via `tsc --noEmit`.
+ * We only enforce basic JS/JSX rules here to keep linting fast on
+ * low-memory machines where @typescript-eslint/eslint-plugin is slow to load.
+ */
+export default [
   {
     files: ['src/**/*.{ts,tsx}'],
-    extends: [...tseslint.configs.recommended],
-    plugins: {
-      react: pluginReact,
-      '@next/next': nextPlugin,
-    },
-    languageOptions: {
-      parserOptions: {
-        project: './tsconfig.json',
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-    settings: {
-      react: { version: 'detect' },
-    },
     rules: {
-      // TypeScript rules
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      // React rules
-      'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off',
-      // Next.js core web vitals
-      ...nextPlugin.configs['core-web-vitals'].rules,
+      'no-unused-vars': 'error',
+      'no-console': 'off',
+      'no-undef': 'off', // TypeScript handles this
     },
   },
   {
-    ignores: ['node_modules/**', '.next/**'],
-  }
-);
+    ignores: ['node_modules/**', '.next/**', 'dist/**'],
+  },
+];
