@@ -41,9 +41,76 @@ export interface ArtisanProfile {
   bio: string | null;
   years_experience: number | null;
   verification_status: VerificationStatus;
+  verification_submitted_at: string | null;
+  verified_at: string | null;
+  service_radius: number | null;
   average_rating: number;
   total_reviews: number;
   completed_jobs: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ServiceArea {
+  id: string;
+  artisan_id: string;
+  city: string;
+  state: string;
+  area: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  radius_km: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Service {
+  id: string;
+  artisan_id: string;
+  category_id: string;
+  name: string;
+  description: string | null;
+  price_from: number | null;
+  price_to: number | null;
+  pricing_type: PricingType;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PortfolioItem {
+  id: string;
+  artisan_id: string;
+  title: string;
+  description: string | null;
+  image_url: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ServiceRequest {
+  id: string;
+  customer_id: string;
+  artisan_id: string;
+  service_id: string | null;
+  title: string;
+  description: string;
+  location: string;
+  preferred_date: string | null;
+  preferred_time: string | null;
+  status: RequestStatus;
+  estimated_price: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Review {
+  id: string;
+  customer_id: string;
+  artisan_id: string;
+  service_request_id: string;
+  rating: number;
+  comment: string | null;
   created_at: string;
   updated_at: string;
 }

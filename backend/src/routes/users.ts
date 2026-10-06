@@ -1,13 +1,11 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/requireAuth';
 import { getMyUser, updateMyUser } from '../controllers/users.controller';
+import { validate, updateProfileSchema } from '../validators/profile.validator';
 
 const router = Router();
 
-/**
- * All /users/me routes require authentication.
- */
 router.get('/me', requireAuth, getMyUser);
-router.patch('/me', requireAuth, updateMyUser);
+router.patch('/me', requireAuth, validate(updateProfileSchema), updateMyUser);
 
 export default router;
