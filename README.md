@@ -47,10 +47,16 @@ cd HandyNG
 ### 2. Set up environment variables
 
 ```bash
-cp .env.example .env
+# For the frontend (Next.js)
+cp .env.example frontend/.env.local
+# Edit frontend/.env.local and fill in NEXT_PUBLIC_* values
+
+# For the backend (Express)
+cp .env.example backend/.env
+# Edit backend/.env and fill in SUPABASE_* and PORT values
 ```
 
-Open `.env` and fill in your real Supabase and API values. Never commit `.env` to Git.
+Never commit `.env.local` or `backend/.env` to Git.
 
 ### 3. Install dependencies
 

@@ -2,13 +2,18 @@ import 'dotenv/config';
 import path from 'path';
 import dotenv from 'dotenv';
 
-// Load .env from the workspace root (two levels up from backend/src/config/)
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+// Load .env from the backend directory first, then fall back to workspace root.
+// This means `backend/.env` takes priority over the root `.env`.
+const backendEnvPath = path.resolve(__dirname, '../../.env');
+const rootEnvPath = path.resolve(__dirname, '../../../.env');
+
+dotenv.config({ path: backendEnvPath });
+dotenv.config({ path: rootEnvPath, override: false }); // don't override already-set values
 
 /**
  * Validated environment configuration.
- * All values are read once at startup so missing variables
- * cause an early, clear error rather than a silent runtime failure.
+ * All values are read once at startup — missing required variables
+ * throw immediately so there are no silent runtime failures.
  */
 
 function required(key: string): string {
@@ -36,7 +41,6 @@ export const env = {
   },
 
   cors: {
-    // Comma-separated list of allowed origins, e.g. http://localhost:3000
     origins: optional('CORS_ORIGINS', 'http://localhost:3000').split(','),
   },
 } as const;
