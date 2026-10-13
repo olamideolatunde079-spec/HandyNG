@@ -24,8 +24,9 @@ import {
   faBan,
   faPhone,
   faCheckCircle,
+  faPenToSquare,
 } from '@fortawesome/free-solid-svg-icons';
-import { Alert } from '@/components/ui/Alert';
+import Alert from '@/components/ui/Alert';
 
 const STATUS_TABS: Array<{ label: string; value: RequestStatus | 'all' }> = [
   { label: 'All', value: 'all' },
@@ -81,7 +82,7 @@ const STATUS_BADGES: Record<
 export default function CustomerRequestsPage() {
   const { initialized } = useRequireAuth('customer');
   const { profile } = useAuth();
-  const { getToken } = useAuthToken();
+  const token = useAuthToken();
 
   const [requests, setRequests] = useState<PopulatedServiceRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,7 +95,6 @@ export default function CustomerRequestsPage() {
     try {
       setLoading(true);
       setError(null);
-      const token = await getToken();
       if (!token) return;
 
       const filter = activeTab === 'all' ? undefined : activeTab;
@@ -105,7 +105,7 @@ export default function CustomerRequestsPage() {
     } finally {
       setLoading(false);
     }
-  }, [getToken, activeTab]);
+  }, [token, activeTab]);
 
   useEffect(() => {
     if (initialized) {
@@ -121,7 +121,6 @@ export default function CustomerRequestsPage() {
     try {
       setCancellingId(requestId);
       setError(null);
-      const token = await getToken();
       if (!token) throw new Error('Not authenticated');
 
       await updateServiceRequestStatus(token, requestId, { status: 'cancelled' });
@@ -383,13 +382,22 @@ export default function CustomerRequestsPage() {
                       )}
 
                       {r.status === 'completed' && (
-                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
-                          <FontAwesomeIcon
-                            icon={faCheckCircle}
-                            className="h-3.5 w-3.5 text-emerald-600"
-                          />
-                          Service Completed
-                        </span>
+                        <>
+                          <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
+                            <FontAwesomeIcon
+                              icon={faCheckCircle}
+                              className="h-3.5 w-3.5 text-emerald-600"
+                            />
+                            Service Completed
+                          </span>
+                          <Link
+                            href="/dashboard/reviews"
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-100 transition"
+                          >
+                            <FontAwesomeIcon icon={faPenToSquare} className="h-3 w-3" />
+                            Leave a Review
+                          </Link>
+                        </>
                       )}
                     </div>
                   </div>

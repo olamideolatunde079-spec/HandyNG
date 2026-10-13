@@ -26,7 +26,7 @@ import {
   faPhone,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
-import { Alert } from '@/components/ui/Alert';
+import Alert from '@/components/ui/Alert';
 
 const STATUS_TABS: Array<{ label: string; value: RequestStatus | 'all' }> = [
   { label: 'All', value: 'all' },
@@ -82,7 +82,7 @@ const STATUS_BADGES: Record<
 export default function ArtisanRequestsPage() {
   const { initialized } = useRequireAuth('artisan');
   const { profile } = useAuth();
-  const { getToken } = useAuthToken();
+  const token = useAuthToken();
 
   const [requests, setRequests] = useState<PopulatedServiceRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,7 +95,6 @@ export default function ArtisanRequestsPage() {
     try {
       setLoading(true);
       setError(null);
-      const token = await getToken();
       if (!token) return;
 
       const filter = activeTab === 'all' ? undefined : activeTab;
@@ -106,7 +105,7 @@ export default function ArtisanRequestsPage() {
     } finally {
       setLoading(false);
     }
-  }, [getToken, activeTab]);
+  }, [token, activeTab]);
 
   useEffect(() => {
     if (initialized) {
@@ -118,7 +117,6 @@ export default function ArtisanRequestsPage() {
     try {
       setUpdatingId(requestId);
       setError(null);
-      const token = await getToken();
       if (!token) throw new Error('Not authenticated');
 
       await updateServiceRequestStatus(token, requestId, { status: newStatus });
