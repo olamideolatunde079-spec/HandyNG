@@ -15,13 +15,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const dotenv = require('/home/olamide/Desktop/HandyNG/node_modules/dotenv');
 dotenv.config({ path: resolve(__dirname, '../.env') });
 
-const URL   = process.env.SUPABASE_URL;
-const KEY   = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const URL = process.env.SUPABASE_URL;
+const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const HEADS = {
   'Content-Type': 'application/json',
-  'Authorization': `Bearer ${KEY}`,
-  'apikey': KEY,
+  Authorization: `Bearer ${KEY}`,
+  apikey: KEY,
 };
 
 async function tryExecSql(sql) {
@@ -29,7 +29,8 @@ async function tryExecSql(sql) {
   const t = setTimeout(() => ctrl.abort(), 12000);
   try {
     const r = await fetch(`${URL}/rest/v1/rpc/exec_sql`, {
-      method: 'POST', headers: HEADS,
+      method: 'POST',
+      headers: HEADS,
       body: JSON.stringify({ sql }),
       signal: ctrl.signal,
     });
@@ -47,9 +48,9 @@ function splitStatements(sql) {
   let cur = '';
   let dTag = null;
   for (const line of sql.split('\n')) {
-    const tags = [...line.matchAll(/\$([^$]*)\$/g)].map(m => m[0]);
+    const tags = [...line.matchAll(/\$([^$]*)\$/g)].map((m) => m[0]);
     for (const tag of tags) {
-      dTag = dTag === null ? tag : (tag === dTag ? null : dTag);
+      dTag = dTag === null ? tag : tag === dTag ? null : dTag;
     }
     cur += line + '\n';
     if (dTag === null && line.trimEnd().endsWith(';')) {
@@ -82,9 +83,14 @@ async function main() {
     return;
   }
 
-  let ok = 0, failed = 0;
+  let ok = 0,
+    failed = 0;
   for (const stmt of stmts) {
-    const label = stmt.replace(/--[^\n]*/g, '').replace(/\s+/g, ' ').trim().slice(0, 60);
+    const label = stmt
+      .replace(/--[^\n]*/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 60);
     const r = await tryExecSql(stmt);
     if (r.ok) {
       ok++;
@@ -92,11 +98,16 @@ async function main() {
     } else {
       failed++;
       console.error(`  ✗ ${label}`);
-      console.error(`    ${r.body?.error || r.body?.message || JSON.stringify(r.body).slice(0, 100)}`);
+      console.error(
+        `    ${r.body?.error || r.body?.message || JSON.stringify(r.body).slice(0, 100)}`
+      );
     }
   }
 
   console.log(`\n${failed === 0 ? '✅' : '⚠️'} ${ok} applied, ${failed} failed`);
 }
 
-main().catch(e => { console.error(e.message); process.exit(1); });
+main().catch((e) => {
+  console.error(e.message);
+  process.exit(1);
+});

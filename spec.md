@@ -240,6 +240,7 @@ NODE_ENV=development
 # Frontend (Next.js)
 # ─────────────────────────────────────────────
 NEXT_PUBLIC_API_URL=http://localhost:3001
+
 ```
 
 > **Security rule:** `SUPABASE_SERVICE_ROLE_KEY` and `SUPABASE_JWKS_URL` are backend-only. Never prefix them with `NEXT_PUBLIC_`. Never commit `.env` to Git.
