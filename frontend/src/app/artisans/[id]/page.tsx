@@ -99,7 +99,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
             HandyNG
           </Link>
           <Link
-            href="/register"
+            href={`/requests/new?artisan_id=${id}`}
             className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition"
           >
             Request service
@@ -214,6 +214,12 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
                               {s.price_to != null && ` – ₦${Number(s.price_to).toLocaleString()}`}
                             </p>
                           )}
+                          <Link
+                            href={`/requests/new?artisan_id=${id}&service_id=${s.id}`}
+                            className="mt-1.5 inline-block text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition"
+                          >
+                            Request this →
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -289,14 +295,14 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
                 Send {displayName} a service request to get started.
               </p>
               <Link
-                href={`/register`}
+                href={`/requests/new?artisan_id=${id}`}
                 className="block w-full rounded-xl bg-emerald-600 py-3 text-center text-sm
                            font-semibold text-white hover:bg-emerald-700 transition"
               >
                 Request service
               </Link>
               <p className="mt-3 text-center text-xs text-gray-400">
-                You need an account to request services.
+                You will specify your job details, date and location.
               </p>
             </div>
 

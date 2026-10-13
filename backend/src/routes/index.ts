@@ -6,6 +6,7 @@ import artisansRouter from './artisans';
 import servicesRouter from './services';
 import categoriesRouter from './categories';
 import uploadRouter from './upload';
+import requestsRouter from './requests';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/artisans', artisansRouter);
 router.use('/services', servicesRouter);
 router.use('/categories', categoriesRouter);
 router.use('/upload', uploadRouter);
+router.use('/requests', requestsRouter);
 
 export default router;
